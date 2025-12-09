@@ -1,108 +1,108 @@
 {
-    "abi": [
-      {
-        "type": "impl",
-        "name": "ReviewImpl",
-        "interface_name": "cairo::contract_msg::IRestaurantReview"
-      },
-      {
-        "type": "struct",
-        "name": "core::starknet::eth_address::EthAddress",
-        "members": [
-          {
-            "name": "address",
-            "type": "core::felt252"
-          }
-        ]
-      },
-      {
-        "type": "interface",
-        "name": "cairo::contract_msg::IRestaurantReview",
-        "items": [
-          {
-            "type": "function",
-            "name": "leave_review",
-            "inputs": [
-              {
-                "name": "user_address",
-                "type": "core::starknet::eth_address::EthAddress"
-              },
-              {
-                "name": "to_address",
-                "type": "core::starknet::eth_address::EthAddress"
-              },
-              {
-                "name": "rating",
-                "type": "core::felt252"
-              },
-              {
-                "name": "text",
-                "type": "core::array::Array::<core::felt252>"
-              }
-            ],
-            "outputs": [],
-            "state_mutability": "external"
-          }
-        ]
-      },
-      {
-        "type": "struct",
-        "name": "cairo::contract_msg::MyData",
-        "members": [
-          {
-            "name": "useraddress",
-            "type": "core::starknet::eth_address::EthAddress"
-          },
-          {
-            "name": "value",
-            "type": "core::felt252"
-          }
-        ]
-      },
-      {
-        "type": "l1_handler",
-        "name": "msg_handler_value",
-        "inputs": [
-          {
-            "name": "from_address",
-            "type": "core::felt252"
-          },
-          {
-            "name": "data",
-            "type": "cairo::contract_msg::MyData"
-          }
-        ],
-        "outputs": [],
-        "state_mutability": "external"
-      },
-      {
-        "type": "event",
-        "name": "cairo::contract_msg::contract_msg::ValueReceived",
-        "kind": "struct",
-        "members": [
-          {
-            "name": "l1_address",
-            "type": "core::felt252",
-            "kind": "key"
-          },
-          {
-            "name": "value",
-            "type": "core::felt252",
-            "kind": "data"
-          }
-        ]
-      },
-      {
-        "type": "event",
-        "name": "cairo::contract_msg::contract_msg::Event",
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "ValueReceivedFromL1",
-            "type": "cairo::contract_msg::contract_msg::ValueReceived",
-            "kind": "nested"
-          }
-        ]
-      }
-    ]
-  }
+  "abi": [
+    {
+      "type": "impl",
+      "name": "ReviewImpl",
+      "interface_name": "cairo::Review::IRestaurantReview"
+    },
+    {
+      "type": "struct",
+      "name": "core::starknet::eth_address::EthAddress",
+      "members": [
+        {
+          "name": "address",
+          "type": "core::felt252"
+        }
+      ]
+    },
+    {
+      "type": "interface",
+      "name": "cairo::Review::IRestaurantReview",
+      "items": [
+        {
+          "type": "function",
+          "name": "leave_review",
+          "inputs": [
+            {
+              "name": "user_address",
+              "type": "core::starknet::eth_address::EthAddress"
+            },
+            {
+              "name": "to_address",
+              "type": "core::starknet::eth_address::EthAddress"
+            },
+            {
+              "name": "rating",
+              "type": "core::felt252"
+            },
+            {
+              "name": "text",
+              "type": "core::array::Array::<core::felt252>"
+            }
+          ],
+          "outputs": [],
+          "state_mutability": "external"
+        }
+      ]
+    },
+    {
+      "type": "struct",
+      "name": "cairo::Review::MyData",
+      "members": [
+        {
+          "name": "useraddress",
+          "type": "core::starknet::eth_address::EthAddress"
+        },
+        {
+          "name": "value",
+          "type": "core::felt252"
+        }
+      ]
+    },
+    {
+      "type": "l1_handler",
+      "name": "msg_handler_value",
+      "inputs": [
+        {
+          "name": "from_address",
+          "type": "core::felt252"
+        },
+        {
+          "name": "data",
+          "type": "cairo::Review::MyData"
+        }
+      ],
+      "outputs": [],
+      "state_mutability": "external"
+    },
+    {
+      "type": "event",
+      "name": "cairo::Review::Review::ValueReceived",
+      "kind": "struct",
+      "members": [
+        {
+          "name": "l1_address",
+          "type": "core::felt252",
+          "kind": "key"
+        },
+        {
+          "name": "value",
+          "type": "core::felt252",
+          "kind": "data"
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "name": "cairo::Review::Review::Event",
+      "kind": "enum",
+      "variants": [
+        {
+          "name": "ValueReceivedFromL1",
+          "type": "cairo::Review::Review::ValueReceived",
+          "kind": "nested"
+        }
+      ]
+    }
+  ]
+}

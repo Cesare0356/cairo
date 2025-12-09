@@ -17,7 +17,7 @@ trait IRestaurantReview<T> {
 }
 
 #[starknet::contract]
-mod contract_msg {
+mod Review {
     use starknet::storage::StorageMapWriteAccess;
 use starknet::event::EventEmitter;
     use super::{IRestaurantReview, MyData};
@@ -64,7 +64,7 @@ use starknet::event::EventEmitter;
     fn msg_handler_value(ref self: ContractState, from_address: felt252, data: MyData) {
         assert(!data.value.is_zero(), 'Dato non valido');
         let l1_address: felt252 = data.useraddress.into();
-        self.is_authorized.write(data.useraddress, true);
+        //self.is_authorized.write(data.useraddress, true);
         self.emit(ValueReceived {
             l1_address,
             value: data.value,
@@ -74,11 +74,11 @@ use starknet::event::EventEmitter;
     #[abi(embed_v0)]
     impl ReviewImpl of IRestaurantReview<ContractState> {
         fn leave_review(ref self: ContractState, user_address: EthAddress, to_address: EthAddress, rating: felt252, text: Array<felt252>) { 
-            let is_authorized: bool = self.is_authorized.entry(user_address).read();
-            if (!is_authorized) {
-                assert(is_authorized, 'Utente non autorizzato');
-                return;
-            }
+            //let is_authorized: bool = self.is_authorized.entry(user_address).read();
+            //if (!is_authorized) {
+                //assert(is_authorized, 'Utente non autorizzato');
+                //return;
+            //}
 
             let res: Result = Result {
                 user_addr: user_address,
@@ -92,7 +92,7 @@ use starknet::event::EventEmitter;
                 };
                 let mut buf: Array<felt252> = array![];
                 resnorev.serialize(ref buf);
-                self.is_authorized.write(user_address, false);
+                //self.is_authorized.write(user_address, false);
                 send_message_to_l1_syscall(to_address.into(), buf.span()).unwrap_syscall();
                 return;
             }
@@ -105,7 +105,7 @@ use starknet::event::EventEmitter;
 
             let review_len = text.len();
             assert(review_len > 3, 'Review troppo corta');
-            assert(review_len < 500, 'Review troppo lunga');
+            assert(review_len < 1024, 'Review troppo lunga');
         
             let mut i = 0;
             while i != review_len {
@@ -121,13 +121,13 @@ use starknet::event::EventEmitter;
             });
             let mut buf: Array<felt252> = array![];
             res.serialize(ref buf);
-            self.is_authorized.write(user_address, false);
+            //self.is_authorized.write(user_address, false);
             self.has_review.entry(user_address).write(true);
             send_message_to_l1_syscall(to_address.into(), buf.span()).unwrap_syscall();
         }
     }
     fn pack_short_string(mut text_array: Array<felt252>) -> felt252 {
-        assert(text_array.len() <= 31, 'Stringa troppo lunga');
+        assert(text_array.len() <= 1024, 'Stringa troppo lunga');
         let mut packed_value: felt252 = 0;
         let shift_factor: felt252 = 256;
         loop {
