@@ -8,7 +8,7 @@ const STARKNET_RPC_URL  = process.env.STARKNET_RPC_URL;
 const accountAddress    = process.env.STARKNET_ACCOUNT_ADDRESS;   // account Starknet (contratto deployato su Sepolia)
 const privateKey        = process.env.PRIVATE_KEY;                // chiave privata dell'account Starknet
 const contractAddress   = process.env.L2_CONTRACT_ADDRESS;        // contratto Cairo con leave_review
-const contractMsgL1     = process.env.CONTRACTMSG_ADDRESS;        // indirizzo L1 ContractMsg (EthAddress)
+const contractMsgL1     = process.env.CONTRACTMSG_ADDRESS;        // indirizzo L1 L1RestaurantGateway (EthAddress)
 const userEvmAddress    = process.env.USER_EVM_ADDRESS;           // utente autorizzato dall'l1_handler (EthAddress)
 
 if (!STARKNET_RPC_URL || !accountAddress || !privateKey || !contractAddress || !contractMsgL1 || !userEvmAddress) {
@@ -29,14 +29,13 @@ const asciiToFelts = (str)  => [...str].map(c => BigInt(c.charCodeAt(0)));  // "
   l2.connect(account);
 
   // ---- calldata leave_review ----
-  // N.B. Cairo 1: Array<felt252> si passa come VERO array, NON [len, ...elems].
   const user_address = evmToFelt(userEvmAddress);      // EthAddress (felt)
-  const to_address   = evmToFelt(contractMsgL1);       // EthAddress (felt) — il tuo ContractMsg L1
+  const to_address   = evmToFelt(contractMsgL1);       // EthAddress (felt) — contract L1
   const rating       = 5n;                             // 1..5
   const textFelts = asciiToFelts("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
   const calldata     = [ user_address, to_address, rating, textFelts ]; // <-- esattamente 4 argomenti
 
-// -------- stima fee --------
+// -------- fee estimate --------
 const feeEst = await account.estimateInvokeFee({
     contractAddress,
     entrypoint: "leave_review",
@@ -52,5 +51,5 @@ const feeEst = await account.estimateInvokeFee({
 
   const receipt = await provider.waitForTransaction(tx.transaction_hash);
 
-  console.log("leave_review completata ✔");
+  console.log("leave_review completed");
 })().catch((e) => { console.error(e); process.exit(1); });
